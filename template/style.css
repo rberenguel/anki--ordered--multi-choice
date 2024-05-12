@@ -1,0 +1,188 @@
+/* First is all the formatting required for the plugin */
+
+.hint {
+  font-size: 70%;
+  display: inline-block;
+}
+
+#answer-front {
+  display: none;
+}
+
+#answer-back {
+  margin-bottom: 0.5em;
+  margin-top: 0.9em;
+}
+
+#mix-in-container-front, #options {
+  display: none;
+}
+
+#answer-proposal-container {
+  text-align: center;
+  margin-top: 2em;
+  width: 80%;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+#answer-choice-container {
+  text-align: center;
+  margin-top: 2em;
+  width: 80%;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+#answer-back a {
+  color: lightgrey;
+  border: 1px solid #c60;
+  margin-left: 0.2em;
+  margin-bottom: 0.2em;
+  display: inline-block;
+  padding: 0.5em;
+  border-radius: 0.3em
+}
+
+#answer-back a.multiline {
+  display: block;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#answer-proposal-container a {
+  color: lightgrey;
+  border: 1px solid #c60;
+  margin-left: 0.2em;
+  margin-bottom: 0.2em;
+  display: inline-block;
+  padding: 0.5em;
+  border-radius: 0.3em
+}
+
+#answer-choice-container a {
+  color: lightgrey;
+  border: 1px solid #c60;
+  margin-left: 0.2em;
+  margin-bottom: 0.2em;
+  display: inline-block;
+  padding: 0.5em;
+  border-radius: 0.3em
+}
+
+.answer-wrapper {
+ margin-bottom: 0.2em;
+}
+
+.squash-left {
+  border-radius: 0.0em 0.3em 0.3em 0.0em !important;
+  margin-left: 0 !important;
+}
+
+.squash-all {
+  border-radius: 0.0em 0.0em 0.0em 0.0em !important;
+  margin-left: 0 !important;
+}
+
+.squash-right {
+  border-radius: 0.3em 0.0em 0.0em 0.3em !important;
+}
+
+a.clicked {
+  /* When answering I add the clicked style, but don't format it. Left for your convenience */
+  cursor: default;
+}
+
+.count {
+  display: inline;
+  color: lightgrey;
+  border: 1px solid #c60;
+  display: inline-block;
+  padding: 0.5em;
+  border-radius: 0.3em
+}
+
+a.answer {
+ color: white;
+ margin-left: 0.2em;
+}
+
+.correct {
+  background: darkgreen;
+  color: lightgrey;
+}
+
+.incorrect {
+  background: darkred;
+  color: lightgrey;
+}
+
+/* General formatting I want in my cards.
+You could delete all this, or change by what you want. 
+Remember to customize the main fields though, you might
+want rules for
+
+#context, #question and #extra
+*/
+
+#context {
+    font-family: monospace;
+    font-size: 18px;
+    text-transform: uppercase;
+    margin-bottom: 1.5em;
+}
+
+#question {
+	font-size: 30px;
+}
+
+
+#extra {
+  margin-top: 1.3em;
+  font-size: 83%;
+  text-align: left;
+  margin-left: 2em;
+}
+
+.card {
+    font-family: arial;
+    font-size: 20px;
+    text-align: center;
+    color: black;
+    background-color: white;
+}
+
+
+a {
+  color: #55aadd;
+}
+
+b {
+  color: #ff9955;
+}
+
+i {
+  color: #55cc55;
+}
+
+code {
+  color: #cc5555 !important;
+	font-family: monospace, Monoid;
+}
+
+u {
+	font-family: monospace, Monoid;
+  color: #cc5555;
+	text-decoration: none !important;
+}
+
+.MathJax {
+  color: #5555dd;
+}
+
+pre {
+  color: #ffe0e0;
+	font-family: monospace, Monoid;
+	font-size: 95%;
+}

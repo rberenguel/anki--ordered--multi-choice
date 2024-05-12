@@ -1,0 +1,155 @@
+<div id="question">{{Question}}</div>
+
+<div id="answer-back"></div>
+
+<div id="answer-front">{{Answer}}</div>
+
+<div id="answer-choice-container"></div>
+
+<div id="extra">{{Extra}}</div>
+
+<hr />
+
+<div id="context">{{Context}}</div>
+
+<div id="options">{{Options}}</div>
+
+<script>
+  // v1.1.8 - https://github.com/SimonLammer/anki-persistence/blob/584396fea9dea0921011671a47a0fdda19265e62/script.js
+  if(void 0===window.Persistence){var e="github.com/SimonLammer/anki-persistence/",t="_default";if(window.Persistence_sessionStorage=function(){var i=!1;try{"object"==typeof window.sessionStorage&&(i=!0,this.clear=function(){for(var t=0;t<sessionStorage.length;t++){var i=sessionStorage.key(t);0==i.indexOf(e)&&(sessionStorage.removeItem(i),t--)}},this.setItem=function(i,n){void 0==n&&(n=i,i=t),sessionStorage.setItem(e+i,JSON.stringify(n))},this.getItem=function(i){return void 0==i&&(i=t),JSON.parse(sessionStorage.getItem(e+i))},this.removeItem=function(i){void 0==i&&(i=t),sessionStorage.removeItem(e+i)},this.getAllKeys=function(){for(var t=[],i=Object.keys(sessionStorage),n=0;n<i.length;n++){var s=i[n];0==s.indexOf(e)&&t.push(s.substring(e.length,s.length))}return t.sort()})}catch(n){}this.isAvailable=function(){return i}},window.Persistence_windowKey=function(i){var n=window[i],s=!1;"object"==typeof n&&(s=!0,this.clear=function(){n[e]={}},this.setItem=function(i,s){void 0==s&&(s=i,i=t),n[e][i]=s},this.getItem=function(i){return void 0==i&&(i=t),void 0==n[e][i]?null:n[e][i]},this.removeItem=function(i){void 0==i&&(i=t),delete n[e][i]},this.getAllKeys=function(){return Object.keys(n[e])},void 0==n[e]&&this.clear()),this.isAvailable=function(){return s}},window.Persistence=new Persistence_sessionStorage,Persistence.isAvailable()||(window.Persistence=new Persistence_windowKey("py")),!Persistence.isAvailable()){var i=window.location.toString().indexOf("title"),n=window.location.toString().indexOf("main",i);i>0&&n>0&&n-i<10&&(window.Persistence=new Persistence_windowKey("qt"))}}
+  
+  // As in front, needs to be the same code or otherwise the logic would fail
+
+  function conditionallySplitAnswer() {
+    const answer = document.getElementById("answer-front");
+    const answerText = answer.textContent;
+    const answerList = Array.from(answer.querySelectorAll("LI"));
+    return answerList;
+  }
+
+  // For now options can be
+  // - "unordered": for any set of choices among several
+  // - "multiline": when the answer is supposed to be several lines (like prose). It is just a formatting option for the output
+  // - "one-word": for spelling things
+  // - TODO: I likely will want formulas, but that can be tricky
+  // - TODO: I don't enforce options being exclusive; at the moment they implicitly are
+
+  options = document.getElementById("options").textContent;
+
+  answer = conditionallySplitAnswer();
+  answerChoiceContainer = document.getElementById("answer-choice-container");
+  answerContainer = document.getElementById("answer-back");
+
+  providedAnswer = Persistence.getItem() || [];
+
+  console.log("provided answer");
+  console.log(providedAnswer);
+
+  // Present the correct answer in its own div. Done in code to remove pipes, if any
+
+  for (let i = 0; i < answer.length; i++) {
+    const ans = answer[i];
+    const a = document.createElement("A");
+    a.innerHTML = ans.innerHTML;
+    a.classList.add("answer");
+    if (options.includes("one-word")) {
+      a.classList.add("squash-all");
+      if (i == 0) {
+        a.classList.remove("squash-all");
+        a.classList.add("squash-right");
+      }
+      if (i == answer.length - 1) {
+        a.classList.remove("squash-all");
+        a.classList.add("squash-left");
+      }
+    }
+    if (options.includes("multiline")) {
+      a.classList.add("multiline");
+    }
+    answerContainer.appendChild(a);
+  }
+
+  // This formats the answer-and-provided answer blocks, with some logic. Commented inline
+
+  function formatAnswer(number, text, correctness, correctIndex) {
+    console.log("foo");
+    console.log(text);
+    const wrapper = document.createElement("DIV");
+    wrapper.classList.add("answer-wrapper");
+    const a = document.createElement("A");
+    const count = document.createElement("DIV");
+    count.classList.add("count");
+    count.textContent = `${number}`;
+    a.innerHTML = text;
+
+    if (number !== null) {
+      // If we need to add the count to the block, squash the rounded corners so everything looks like a single piece
+      a.classList.add("squash-left");
+      count.classList.add("squash-right");
+      wrapper.appendChild(count);
+    }
+    if (correctness) {
+      a.classList.add("correct");
+      count.classList.add("correct");
+    } else {
+      a.classList.add("incorrect");
+      count.classList.add("incorrect");
+      if (correctIndex) {
+        // If we provide a new index
+        if (correctIndex < 0) {
+          // If it is smaller than 0 it means that the word is not in the answer. Put a X
+          count.textContent = "X";
+          count.style.color = "red";
+        } else {
+          count.textContent = `${number} -> [${correctIndex}]`;
+        }
+      }
+    }
+
+    wrapper.appendChild(a);
+    answerChoiceContainer.appendChild(wrapper);
+  }
+
+  for (let i = 0; i < providedAnswer.length; i++) {
+    const ans = providedAnswer[i];
+    let check, correct;
+    if (options.includes("unordered")) {
+      console.log(ans);
+      console.log(answer);
+      console.log(answer.includes(ans.innerHTML));
+      correct = answer.map((a) => a.innerHTML).includes(ans);
+    } else {
+      check = i < answer.length ? answer[i] : undefined;
+      correct = ans == check.innerHTML;
+    }
+    const a = document.createElement("A");
+    if (providedAnswer && providedAnswer.length == 1 && answer.length == 1) {
+      // For one-word answers, I don't want to show numbers in any case (or accept answers, in the front)
+      if (answer.length == 1) {
+        // ???
+      }
+      console.log("through here");
+      formatAnswer(null, providedAnswer[i], correct);
+    } else {
+      const correctIndex = answer.map((a) => a.innerHTML).indexOf(ans);
+      if (options.includes("unordered")) {
+        formatAnswer(null, ans, correct);
+      } else {
+        formatAnswer(i, providedAnswer[i], correct, correctIndex);
+      }
+    }
+  }
+
+  for (let i = providedAnswer.length; i < answer.length; i++) {
+    const ans = answer[i];
+    if (answer.length == 1) {
+      formatAnswer(null, ans.innerHTML, false);
+    } else {
+      if (options.includes("unordered")) {
+        formatAnswer(null, ans.innerHTML, false);
+      } else {
+        formatAnswer(i, ans.innerHTML, false);
+      }
+    }
+  }
+</script>
