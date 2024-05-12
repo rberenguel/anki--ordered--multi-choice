@@ -20,9 +20,15 @@
 
 This is an Anki template for multiple-choice question/answer, inspired by a Reddit post ([here](https://www.reddit.com/r/Anki/comments/1byctiz/note_type_puzzle_sentences/)). I created my own because I wanted a different set of features and to get it working on mobile. For mobile, I rely on Simon Lammer's [Anki Persistence script](https://github.com/SimonLammer/anki-persistence), which I inline in the template.
 
-##  1. <a name='Somescreenshots'></a>Some screenshots
+I have only tested this on Mac and iOS devices. It only relies on the persistence plugin (which should work everywhere) and the fact that links are clickable on mobile Anki without triggering `show answer` on tap.
+
+##  1. <a name='Somescreenshots'></a>Some screenshots and a screen recording
 
 Below in *Usage* you can find what each field is used for.
+
+Here is a video on mobile (iPhone) of the `one-word` mode:
+
+https://github.com/rberenguel/anki--ordered--multi-choice/assets/2410938/0ee6ad86-51bc-4f84-8aee-8387e58f124a
 
 ###  1.1. <a name='Editingcards'></a>Editing cards
 
