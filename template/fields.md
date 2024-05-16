@@ -10,6 +10,7 @@ Examples:
 2. Good toppings on pizza
 3. Spelling of "tomato"
 4. The poem Ode on a Grecian Urn by John Keats.
+5. Conjugation of the verb to be
 
 ### Context
 
@@ -53,6 +54,7 @@ You can read more about options in the front and back templates. For now, option
 - unordered
 - one-word
 - multiline
+- polyline
 
 Each makes the formatting and answering to behave differently. If you check the examples for questions above, we would have one of each case:
 
@@ -60,3 +62,4 @@ Each makes the formatting and answering to behave differently. If you check the 
 2. _Good toppings on pizza_ is an example of `unordered`. Arguably tomato should be below cheese, but the answer is good in any order. The use case here is lists of things you want to get right, like grammatical rules.
 3. _Spelling of tomato_ is an example of `one-word`. The output is formatted nicely to form the word as if spelling it. Useful for spelling foreign words, particularly when adding as answer mix-ins what makes _you_ fail that spelling.
 4. _Poem_ is an example of `multiline`. This is just formatted nicely when presenting the answer.
+5. _Conjugation_ is an example of `polyline`. Useful for lists of lists. It formats answers (when answering, and when presenting the answer) in the expected format.
