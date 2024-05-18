@@ -22,6 +22,8 @@ This is an Anki template for multiple-choice question/answer, inspired by a Redd
 
 I have only tested this on Mac and iOS devices. It only relies on the persistence plugin (which should work everywhere) and the fact that links are clickable on mobile Anki without triggering `show answer` on tap.
 
+In case something JS related fails, the error will show in the card, which is particularly useful on mobile, where there is no webview debugging possible.
+
 ##  1. <a name='Somescreenshots'></a>Some screenshots and a screen recording
 
 Below in *Usage* you can find what each field is used for.

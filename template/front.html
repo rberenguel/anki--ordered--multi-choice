@@ -1,21 +1,41 @@
-<div id="context">{{Context}}</div>
-
-<div id="question">{{Question}}</div>
-
-<div id="answer-front">{{Answer}}</div>
-
-<div id="answer-proposal-container"></div>
-
-<div id="answer-choice-container"></div>
-
-<div id="mix-in-container-front">{{Mix-in answer}}</div>
-
-<div id="options">{{Options}}</div>
-
+<div id="context">
+  {{Context}}
+</div>
+  
+<div id="question">
+  {{Question}}
+</div>
+  
+<div id="answer-front">
+  {{Answer}}
+</div>
+  
+<hr class="proposal"/>
+  
+<div id="answer-proposal-container">
+</div>
+  
+<hr class="proposal"/>
+  
+<div id="answer-choice-container">
+</div>
+  
+<div id="mix-in-container-front">
+{{Mix-in answer}}
+</div>
+  
+<div id="options">
+{{Options}}
+</div>
+  
+<div id="console">
+</div>
+  
 <script>
 // v1.1.8 - https://github.com/SimonLammer/anki-persistence/blob/584396fea9dea0921011671a47a0fdda19265e62/script.js
 if(void 0===window.Persistence){var e="github.com/SimonLammer/anki-persistence/",t="_default";if(window.Persistence_sessionStorage=function(){var i=!1;try{"object"==typeof window.sessionStorage&&(i=!0,this.clear=function(){for(var t=0;t<sessionStorage.length;t++){var i=sessionStorage.key(t);0==i.indexOf(e)&&(sessionStorage.removeItem(i),t--)}},this.setItem=function(i,n){void 0==n&&(n=i,i=t),sessionStorage.setItem(e+i,JSON.stringify(n))},this.getItem=function(i){return void 0==i&&(i=t),JSON.parse(sessionStorage.getItem(e+i))},this.removeItem=function(i){void 0==i&&(i=t),sessionStorage.removeItem(e+i)},this.getAllKeys=function(){for(var t=[],i=Object.keys(sessionStorage),n=0;n<i.length;n++){var s=i[n];0==s.indexOf(e)&&t.push(s.substring(e.length,s.length))}return t.sort()})}catch(n){}this.isAvailable=function(){return i}},window.Persistence_windowKey=function(i){var n=window[i],s=!1;"object"==typeof n&&(s=!0,this.clear=function(){n[e]={}},this.setItem=function(i,s){void 0==s&&(s=i,i=t),n[e][i]=s},this.getItem=function(i){return void 0==i&&(i=t),void 0==n[e][i]?null:n[e][i]},this.removeItem=function(i){void 0==i&&(i=t),delete n[e][i]},this.getAllKeys=function(){return Object.keys(n[e])},void 0==n[e]&&this.clear()),this.isAvailable=function(){return s}},window.Persistence=new Persistence_sessionStorage,Persistence.isAvailable()||(window.Persistence=new Persistence_windowKey("py")),!Persistence.isAvailable()){var i=window.location.toString().indexOf("title"),n=window.location.toString().indexOf("main",i);i>0&&n>0&&n-i<10&&(window.Persistence=new Persistence_windowKey("qt"))}}
 
+try {
   function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -23,11 +43,13 @@ if(void 0===window.Persistence){var e="github.com/SimonLammer/anki-persistence/"
     }
   }
 
+  // I had to add a logger to the screen to find out console.info is not available on mobile
+
   // For now options can be
   // - "unordered": for any set of choices among several
   // - "multiline": when the answer is supposed to be several lines (like prose). It is just a formatting option for the output
+  // - "polyline": allows nested lists, to have complex ordered answers. Tricky to set up, needs desktop editor ideally
   // - "one-word": for spelling things
-  // - "polyline": for things like verb conjugation, where you have a list of lists. Expected format is then <ul><li>top level 1</li><ul>list of answers for 1</ul> etc
   // - TODO: I likely will want formulas, but that can be tricky
   // - TODO: I don't enforce options being exclusive; at the moment they implicitly are
 
@@ -79,6 +101,12 @@ if(void 0===window.Persistence){var e="github.com/SimonLammer/anki-persistence/"
   // Presents a random selection of the mixins (all of them) and the answer words.
   // TODO: pick a smaller number out of mixins (min 3 or 4 likely)
 
+  if (options.includes("polyline") && options.includes("leftalign")) {
+    console.log("Aligning left the answer");
+    answerProposalContainer.style.marginLeft = "4em";
+    answerProposalContainer.style.textAlign = "left";
+  }
+
   for (const mixin of mixins) {
     const a = document.createElement("A");
     a.innerHTML = mixin.innerHTML;
@@ -110,6 +138,13 @@ if(void 0===window.Persistence){var e="github.com/SimonLammer/anki-persistence/"
       } else {
         if (!options.includes("polyline")) {
           answerProposalContainer.appendChild(a);
+          if (options.includes("multiline")) {
+            if (options.includes("leftalign")) {
+              a.classList.add("blocked");
+            } else {
+              a.classList.add("multiline");
+            }
+          }
         } else {
           a.classList.add("inlined");
           const answerDiv = document.getElementById("answer-front");
@@ -130,6 +165,9 @@ if(void 0===window.Persistence){var e="github.com/SimonLammer/anki-persistence/"
             answerDiv.appendChild(div);
             div.classList.add("blocked");
             div.appendChild(a);
+            // The first one. All adds a slight non-margin to the left
+            a.classList.add("squash-all");
+            a.classList.add("squash-right");
             answerProposalContainer.appendChild(div);
           } else {
             console.log("Else case");
@@ -137,17 +175,25 @@ if(void 0===window.Persistence){var e="github.com/SimonLammer/anki-persistence/"
             // You should have one more A: the header
             console.log(currentDivBlocks);
             console.log(idx);
-            console.log("As, Toplevel and Lis");
+            console.log("idx above, As, Toplevel and Lis");
             const divAs = currentDivBlocks[idx].querySelectorAll("A.inlined");
             console.log(divAs);
             console.log(topLevel);
             const ansLis = topLevel[idx].querySelectorAll("LI");
             console.log(ansLis);
+            a.classList.add("squash-all");
+            if (divAs.length == ansLis.length) {
+              // last of line
+              a.classList.remove("squash-all");
+              a.classList.add("squash-left");
+            }
             if (divAs.length >= ansLis.length + 1) {
               const div = document.createElement("DIV");
               answerDiv.appendChild(div);
               div.classList.add("blocked");
               div.appendChild(a);
+              a.classList.add("squash-all");
+              a.classList.add("squash-right");
               answerProposalContainer.appendChild(div);
             } else {
               currentDivBlocks[idx].appendChild(a);
@@ -171,4 +217,16 @@ if(void 0===window.Persistence){var e="github.com/SimonLammer/anki-persistence/"
     });
     answerChoiceContainer.appendChild(a);
   }
+} catch (error) {
+  const console = document.getElementById("console");
+  const errorDiv = document.createElement("DIV");
+  const stackDiv = document.createElement("DIV");
+  errorDiv.innerHTML = error.message;
+  for (line of error.stack.split("\n")) {
+    const tn = document.createTextNode(line);
+    stackDiv.appendChild(tn);
+  }
+  console.appendChild(errorDiv);
+  console.appendChild(stackDiv);
+}
 </script>
