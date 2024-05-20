@@ -19,7 +19,27 @@
 }
 
 #question {
-  font-size: 30px;
+  font-size: 25px;
+  margin-bottom: 1.5em;
+}
+
+#console {
+  color: #997777;
+}
+
+#console {
+  text-align: left;
+}
+
+#console > div {
+  margin-top: 1em;
+}
+
+.proposal {
+  border-top: 1px solid #555;
+  border-bottom: none;
+  border-left: none;
+  border-right: none;
 }
 
 .hint {
@@ -44,7 +64,8 @@
 
 #answer-proposal-container {
   text-align: center;
-  margin-top: 2em;
+  margin-top: 0.9em;
+  margin-bottom: 0.9em;
   width: 80%;
   margin-right: auto;
   margin-left: auto;
@@ -56,6 +77,21 @@
   width: 80%;
   margin-right: auto;
   margin-left: auto;
+}
+
+@media (max-width: 768px) {
+  #answer-proposal-container {
+    font-size: 80%;
+  }
+  #answer-choice-container {
+    font-size: 80%;
+  }
+  #answer-proposal-container a {
+    padding: 0.3em !important;
+  }
+  #answer-choice-container a {
+    padding: 0.3em !important;
+  }
 }
 
 #answer-back a {
@@ -75,6 +111,8 @@
   margin-right: auto;
 }
 
+/* I should set these up as classes */
+
 #answer-proposal-container a {
   color: lightgrey;
   border: 1px solid #c60;
@@ -83,6 +121,7 @@
   display: inline-block;
   padding: 0.5em;
   border-radius: 0.3em;
+  line-height: 1.5em; /* This fixes issues with bold or exponents */
 }
 
 #answer-choice-container a {
@@ -93,6 +132,7 @@
   display: inline-block;
   padding: 0.5em;
   border-radius: 0.3em;
+  line-height: 1.5em; /* This fixes issues with bold or exponents */
 }
 
 .answer-wrapper {
@@ -116,6 +156,11 @@
 a.clicked {
   /*background: darkblue;
 color: darkyellow;*/
+}
+
+a.blocked {
+  display: block !important;
+  width: fit-content;
 }
 
 div.blocked {
@@ -182,6 +227,28 @@ u {
 
 .MathJax {
   color: #5555dd;
+}
+
+i u,
+u i {
+  color: #cccc33 !important;
+  text-style: normal !important;
+}
+
+i u b,
+u b i,
+i b u,
+u i b,
+b i u,
+b u i {
+  color: #33cccc !important;
+  font-style: normal !important;
+}
+
+sup,
+sub {
+  display: inline-block;
+  line-height: 0.5em;
 }
 
 pre {
